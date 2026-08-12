@@ -1,0 +1,15 @@
+{
+  "name": "hlink-bd-bot",
+  "version": "1.0.0",
+  "description": "WhatsApp Bot for HLINK BD",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.3.0",
+    "@google/genai": "^0.1.1",
+    "qrcode-terminal": "^0.12.0",
+    "express": "^4.19.2"
+  }
+}
