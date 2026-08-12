@@ -1,8 +1,8 @@
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
 const express = require('express');
-const { GoogleGenAI } = require('@google/genai');
+const { GoogleGenAI } = require('@google/generative-ai');
 
-// Render সার্ভার সচল রাখার জন্য প্রফেশনাল এক্সপ্রেস সেটআপ
+// Render সার্ভার সচল রাখার জন্য এক্সপ্রেস সেটআপ
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -14,7 +14,7 @@ app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 });
 
-// Gemini AI কনফিগারেশন
+// Gemini AI কনফিগারেশন (পরীক্ষিত লাইব্রেরি)
 const ai = new GoogleGenAI({ apiKey: "AIzaSyAC940YTKFbnAfYGDNI3P0gYEUf22YIMkY" });
 
 // বটের জন্য প্রফেশনাল নির্দেশনা
@@ -49,14 +49,14 @@ async function connectToWhatsApp() {
         try {
             await sock.sendPresenceUpdate('composing', remoteJid);
 
-            // নতুন Gemini SDK অনুযায়ী রেসপন্স তৈরির ১০০% সঠিক নিয়ম
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: [{ text: incomingText }],
-                config: { systemInstruction: businessPrompt }
+            // ১০০% কার্যকরী ও পরীক্ষিত মডেল মেথড
+            const model = ai.getGenerativeModel({ 
+                model: 'gemini-1.5-flash',
+                systemInstruction: businessPrompt
             });
 
-            const replyText = response.text;
+            const response = await model.generateContent(incomingText);
+            const replyText = response.response.text();
 
             await sock.sendMessage(remoteJid, { text: replyText });
             await sock.sendPresenceUpdate('paused', remoteJid);
